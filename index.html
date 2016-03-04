@@ -38,9 +38,6 @@ var margin = {top: 10, right: 50, bottom: 20, left: 50},
     width = 120 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
-var min = Infinity,
-    max = -Infinity;
-
 var chart = d3.box()
     .whiskers(iqr(1.5))
     .width(width)
@@ -49,31 +46,38 @@ var chart = d3.box()
 d3.csv("data/wineQualityReds.csv", function(error, csv) {
   if (error) throw error;
 
-  var data = [];
+  var r = filterCSV(csv, "alcohol");
+  var data = r[0]
+  var extent = r[1]
 
-  data = d3.nest()
+  chart.domain(extent);
+
+  var svg = d3.select("body").selectAll("svg")
+      .data(data)
+      .enter().append("svg")
+      .attr("class", "box")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.bottom + margin.top)
+      .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+      .call(chart);
+
+});
+
+function filterCSV(csv, key) {
+
+  var data = d3.nest()
     .key(function(d) {return d.quality;})
     .rollup(function(leaves) {
-      return leaves.map(function(d) {return d["alcohol"]})
+      return leaves.map(function(d) {return +d[key]})
     })
     .entries(csv);
 
   data = data.map(function(d) { return d.values })
 
-  // chart.domain(d3.extent(csv.map(function(d) {return d["alcohol"]})));
-  chart.domain([8,16]);
-
-  var svg = d3.select("body").selectAll("svg")
-      .data(data)
-    .enter().append("svg")
-      .attr("class", "box")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.bottom + margin.top)
-    .append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-      .call(chart);
-
-});
+  var extent = d3.extent(csv.map(function(d) {return +d[key]}));
+  return [data, extent]
+}
 
 // Returns a function to compute the interquartile range.
 function iqr(k) {
