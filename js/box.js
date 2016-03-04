@@ -178,7 +178,7 @@ d3.box = function() {
           .remove();
 
       // Compute the tick format.
-      var format = tickFormat || x1.tickFormat(8);
+      var format = tickFormat || x1.tickFormat(8, ".3r");
 
       // Update box ticks.
       var boxTick = g.selectAll("text.box")

@@ -8,6 +8,11 @@ exploratory data analysis of the dataset and also allows some exploration.
 
 # Design
 
+The basic idea is to use faceted boxplots for each quality ranking versus the
+other variables.
+
+![Sketch](/sketch.png?raw=true "Sketch")
+
 # Feedback
 
 # Resources
