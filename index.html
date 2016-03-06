@@ -1,7 +1,8 @@
 
 <!DOCTYPE html>
 <meta charset="utf-8">
-<style>
+<head>
+  <style>
 
 body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -28,41 +29,74 @@ body {
   stroke: #ccc;
 }
 
-</style>
+  </style>
+</head>
 <body>
-<script src="//d3js.org/d3.v3.min.js"></script>
-<script src="js/box.js"></script>
-<script>
+  <script src="//d3js.org/d3.v3.min.js"></script>
+  <script src="js/box.js"></script>
+  <script>
 
-var margin = {top: 10, right: 50, bottom: 20, left: 50},
+  var margin = {top: 10, right: 50, bottom: 20, left: 50},
     width = 120 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
-var chart = d3.box()
+  var chart = d3.box()
     .whiskers(iqr(1.5))
     .width(width)
     .height(height);
 
-d3.csv("data/wineQualityReds.csv", function(error, csv) {
-  if (error) throw error;
+  d3.csv("data/wineQualityReds.csv", function(error, csv) {
+    if (error) throw error;
+    d3.csv("data/variables.csv", function(error, variables) {
+      if (error) throw error;
 
-  var r = filterCSV(csv, "alcohol");
-  var data = r[0]
-  var extent = r[1]
+      var r = filterCSV(csv, "alcohol");
+      var data = r[0];
+      var extent = r[1];
 
-  chart.domain(extent);
+      chart.domain(extent);
 
-  var svg = d3.select("body").selectAll("svg")
-      .data(data)
-      .enter().append("svg")
-      .attr("class", "box")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.bottom + margin.top)
-      .append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-      .call(chart);
+      var svg = d3.select("body").selectAll("svg")
+        .data(data)
+        .enter().append("svg")
+        .attr("class", "box")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.bottom + margin.top)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+        .call(chart);
 
-});
+      function changeVariable() {
+        var key = this.children[this.selectedIndex].value
+          var r = filterCSV(csv, key);
+        var data = r[0];
+        var extent = r[1];
+        svg.datum(function(d,i) {
+          return data[i];
+        })
+        chart.domain(extent);
+        svg.call(chart.duration(1000))
+      };
+
+
+      var select  = d3.select("body")
+        .append("select")
+        .on("change", changeVariable);
+
+      debugger
+      var options = select
+        .selectAll('option')
+        .data(variables);
+
+      options
+        .enter()
+        .append("option")
+        .text(function(d) { return d.name; })
+        .attr("value", function(d) { return d.variable ;});
+
+    });
+  });
+
 
 function filterCSV(csv, key) {
 
@@ -71,11 +105,11 @@ function filterCSV(csv, key) {
     .rollup(function(leaves) {
       return leaves.map(function(d) {return +d[key]})
     })
-    .entries(csv);
+  .entries(csv);
 
   data = data.map(function(d) { return d.values })
 
-  var extent = d3.extent(csv.map(function(d) {return +d[key]}));
+    var extent = d3.extent(csv.map(function(d) {return +d[key]}));
   return [data, extent]
 }
 
@@ -83,14 +117,14 @@ function filterCSV(csv, key) {
 function iqr(k) {
   return function(d, i) {
     var q1 = d.quartiles[0],
-        q3 = d.quartiles[2],
-        iqr = (q3 - q1) * k,
-        i = -1,
-        j = d.length;
+    q3 = d.quartiles[2],
+    iqr = (q3 - q1) * k,
+    i = -1,
+    j = d.length;
     while (d[++i] < q1 - iqr);
     while (d[--j] > q3 + iqr);
     return [i, j];
   };
 }
 
-</script>
+  </script>
