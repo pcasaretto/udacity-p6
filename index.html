@@ -1,7 +1,10 @@
-
 <!DOCTYPE html>
 <meta charset="utf-8">
 <head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
   <style>
 
 body {
@@ -32,6 +35,30 @@ body {
   </style>
 </head>
 <body>
+  <div class="container">
+  <h1>A chemical analysis of Wine Quality</h1>
+  <p>
+  This dataset is related to red variants of the Portuguese "Vinho Verde" wine
+  For more details, consult: http://www.vinhoverde.pt/en/ or the reference [Cortez et al., 2009].
+  There are 1599 observation of wines in the dataset with 12 features . There is one categorical variable (quality) and the others are numerical variables that indicate wine physical and chemical properties of the wine.
+  </p>
+  <p>
+  The median quality is 6, which in the given scale (1-10) is a mediocre wine. The better wine in the sample has a score of 8, and the worst has a score of 3. The dataset is not balanced, that is, there are a more average wines than poor or excelent ones.
+  </p>
+  <p>
+  The most revealing correlation found was quality vs alcohol. With an increase in alcohol graduation we see an increase in the concentration of better graded wines. Given the high number of outliers we cannot rely on alcohol alone to produce better wines but next time you're at the supermarket it might be a good idead to look for stronger wines.
+  </p>
+  <p>
+  Finnaly, this visualization allows you to explore other variables and their relations with quality.
+  </p>
+  <form>
+    <div class="form-group">
+      <label >Variable</label>
+      <select id="variables-select"></select>
+    </div>
+  </form>
+  <div id="chart"></div>
+  </div>
   <script src="//d3js.org/d3.v3.min.js"></script>
   <script src="js/box.js"></script>
   <script>
@@ -56,7 +83,7 @@ body {
 
       chart.domain(extent);
 
-      var svg = d3.select("body").selectAll("svg")
+      var svg = d3.select("div#chart").selectAll("svg")
         .data(data)
         .enter().append("svg")
         .attr("class", "box")
@@ -79,11 +106,9 @@ body {
       };
 
 
-      var select  = d3.select("body")
-        .append("select")
+      var select  = d3.select("select#variables-select")
         .on("change", changeVariable);
 
-      debugger
       var options = select
         .selectAll('option')
         .data(variables);
@@ -128,3 +153,4 @@ function iqr(k) {
 }
 
   </script>
+</body>
