@@ -32,6 +32,18 @@ body {
   stroke: #ccc;
 }
 
+.axis path,
+.axis line {
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font-family: sans-serif;
+    font-size: 11px;
+}
+
   </style>
 </head>
 <body>
@@ -42,6 +54,13 @@ body {
   For more details, consult: http://www.vinhoverde.pt/en/ or the reference [Cortez et al., 2009].
   There are 1599 observation of wines in the dataset with 12 features . There is one categorical variable (quality) and the others are numerical variables that indicate wine physical and chemical properties of the wine.
   </p>
+  <form>
+    <div class="form-group">
+      <label >Variable</label>
+      <select id="variables-select"></select>
+    </div>
+  </form>
+  <div id="chart"></div>
   <p>
   The median quality is 6, which in the given scale (1-10) is a mediocre wine. The better wine in the sample has a score of 8, and the worst has a score of 3. The dataset is not balanced, that is, there are a more average wines than poor or excelent ones.
   </p>
@@ -51,13 +70,6 @@ body {
   <p>
   Finnaly, this visualization allows you to explore other variables and their relations with quality.
   </p>
-  <form>
-    <div class="form-group">
-      <label >Variable</label>
-      <select id="variables-select"></select>
-    </div>
-  </form>
-  <div id="chart"></div>
   </div>
   <script src="//d3js.org/d3.v3.min.js"></script>
   <script src="js/box.js"></script>
@@ -66,6 +78,8 @@ body {
   var margin = {top: 10, right: 50, bottom: 20, left: 50},
     width = 120 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
+
+  var padding = {top: 10, right: 50, bottom: 20, left: 50};
 
   var chart = d3.box()
     .whiskers(iqr(1.5))
@@ -83,26 +97,78 @@ body {
 
       chart.domain(extent);
 
-      var svg = d3.select("div#chart").selectAll("svg")
+      var full_width = data.length * (width + margin.left + margin.right);
+      var internal_width = full_width - padding.left - padding.right
+
+      var svg = d3.select("div#chart")
+        .append("svg")
+        .attr("width", full_width)
+        .attr("height", height + margin.bottom + margin.top + 20);
+
+      var xScale = d3.scale.ordinal().domain([3,4,5,6,7,8]).rangePoints([0, internal_width], 0.5)
+
+      svg.append("g")
+        .attr("width", internal_width)
+        .attr("height", 20)
+
+      svg.append("g")
+        .attr("width", internal_width)
+        .attr("height", 20)
+        .append("text")
+        .attr("y", 10)
+        .attr("dy", "0.35em")
+        .attr("x", internal_width/2)
+        .attr("text-anchor", "middle")
+        .text("Quality")
+
+      var variable_label = svg.append("g")
+        .attr("width", 20)
+        .attr("height", height)
+        .append("text")
+        .attr("transform","rotate(-90)")
+        .attr("y", 10)
+        .attr("dy", "0.35em")
+        .attr("x", -height/2)
+        .attr("text-anchor", "middle")
+        .text(variables[0]["units"])
+
+      var chart_g = svg
+        .append("g")
+        .attr("transform", "translate(20,20)")
+
+      var boxes = chart_g
+        .selectAll("g")
         .data(data)
-        .enter().append("svg")
+        .enter().append("g")
         .attr("class", "box")
         .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.bottom + margin.top)
+        .attr("height", height)
+        .attr("transform", function(e, i) {
+          return "translate(" + xScale(i+3) + "," + margin.top + ")"
+        })
         .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
         .call(chart);
 
+      var xAxis = d3.svg.axis()
+                .scale(xScale)
+                .orient("bottom");
+
+      chart_g.append("g")
+        .attr("class", "axis")
+        .call(xAxis);
+
       function changeVariable() {
-        var key = this.children[this.selectedIndex].value
-          var r = filterCSV(csv, key);
+        // var key = this.children[this.selectedIndex].value;
+        var key = variables[this.selectedIndex]["variable"];
+        var r = filterCSV(csv, key);
         var data = r[0];
         var extent = r[1];
-        svg.datum(function(d,i) {
+        boxes.datum(function(d,i) {
           return data[i];
         })
         chart.domain(extent);
-        svg.call(chart.duration(1000))
+        boxes.call(chart.duration(1000))
+        variable_label.text(variables[this.selectedIndex]["units"])
       };
 
 
