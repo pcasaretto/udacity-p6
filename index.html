@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <head>
+  <link href='https://fonts.googleapis.com/css?family=Expletus+Sans:400,400italic' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
 <!-- Optional theme -->
@@ -8,7 +9,7 @@
   <style>
 
 body {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: 'Expletus Sans', cursive;
 }
 
 .box {
@@ -60,17 +61,23 @@ body {
       <select id="variables-select"></select>
     </div>
   </form>
-  <div id="chart"></div>
-  <p>
-  The median quality is 6, which in the given scale (1-10) is a mediocre wine. The better wine in the sample has a score of 8, and the worst has a score of 3. The dataset is not balanced, that is, there are a more average wines than poor or excelent ones.
-  </p>
-  <p>
-  The most revealing correlation found was quality vs alcohol. With an increase in alcohol graduation we see an increase in the concentration of better graded wines. Given the high number of outliers we cannot rely on alcohol alone to produce better wines but next time you're at the supermarket it might be a good idead to look for stronger wines.
-  </p>
-  <p>
-  Finnaly, this visualization allows you to explore other variables and their relations with quality.
-  </p>
+  <div class="row">
+    <div class="col-md-8">
+      <div id="chart"></div>
+    </div>
+    <div class="col-md-4">
+      <p>
+        The median quality is 6, which in the given scale (1-10) is a mediocre wine. The better wine in the sample has a score of 8, and the worst has a score of 3. The dataset is not balanced, that is, there are a more average wines than poor or excelent ones.
+      </p>
+      <p>
+        The most revealing correlation found was quality vs alcohol. With an increase in alcohol graduation we see an increase in the concentration of better graded wines. Given the high number of outliers we cannot rely on alcohol alone to produce better wines but next time you're at the supermarket it might be a good idead to look for stronger wines.
+      </p>
+      <p>
+        Finnaly, this visualization allows you to explore other variables and their relations with quality.
+      </p>
+    </div>
   </div>
+</div>
   <script src="//d3js.org/d3.v3.min.js"></script>
   <script src="js/box.js"></script>
   <script>
