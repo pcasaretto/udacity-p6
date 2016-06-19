@@ -8,13 +8,26 @@ exploratory data analysis of the dataset and also allows some exploration.
 
 # Design
 
+The story I want to convey is that **wines with more alcohol in them, in general
+were considered better wines**.
+
+More specifically, I want to display alcohol distribution faceted by quality. Based on my previous work on this dataset I chose boxplots to
+
+Wikipedia's description corroborates with the intented purpose:
+
+> ... Box plots may seem more primitive than a histogram or kernel density estimate but they do have some advantages. They take up less space and are therefore particularly useful for **comparing distributions between several groups or sets of data** ...
+
 The basic idea is to use faceted boxplots for each quality ranking versus the
 other variables.
 
 ![Sketch](/sketch.png?raw=true "Sketch")
 
+## Changes
+
 After the first feedback it became clear that the lack of labels and ticks on the axes were pretty misleading.
 In retrospect, that should have been pretty obvious. Even the sketch screenshot contains them.
+
+With the second feedback, I decided I needed to focus on telling the story before allowing the user to explore the data on his own. I chose to use timed transitions to showcase each part of the story by un-hiding the relevant paragraph while also using visual cues to highlight the respective part of the chart.
 
 # Feedback
 
@@ -28,6 +41,8 @@ I asked the following questions:
 
 ## #1
 
+From a friend.
+
 * What do you notice in the visualization?
 > I guess each box in the graphic is related to one single red variant of Vinho Verde. The circles in the graphic are related to the outliers.
 * What questions do you have about the data?
@@ -39,6 +54,14 @@ I asked the following questions:
 * Is there something you don’t understand in the graphic?
 > Like I said in the first question, I GUESS the boxes are related to the red variants of Vinho Verde, but I can be wrong. It is hard to understand the graphic in the first place. I had to read the text above and visit the website to understand, and I don't even know if I'm right. In my opinion, it would be great to put some labels on it.
 
+## #2
+
+From the first submission to Udacity Reviews.
+
+The visualization is great and clean, however in mostly lies on the exploratory side. README.md and explanations near the chart show that you actually have some story to present. It is just not clearly presented in the visualization. I suggest you highlighting most interesting parts of the visualization, for example, you can highlight wines with the highest quality and most alcohol with a different color.
+
+Design choices are great, but you have to add more visual cues to draw a reader's attention to important parts of the visualization to show him a meaningful relationship.
+Also, great job with adding explanations and background about the data to the page. It is really helpful.
 
 # Resources
 
