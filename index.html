@@ -114,7 +114,10 @@ body {
         .attr("height", height + margin.bottom + margin.top + 20);
 
       // here we set up the xscale from the quality scores
-      var xScale = d3.scale.ordinal().domain([3,4,5,6,7,8]).rangePoints([0, internal_width], 0.5)
+      var xScale = d3.scale
+        .ordinal()
+        .domain([3,4,5,6,7,8])
+        .rangePoints([0, internal_width], 0.5)
 
       // append a g and a text element for the x axis label
       svg.append("g")
@@ -187,7 +190,7 @@ body {
       };
 
       // bind the change event on our dropdown element to changeVariable
-      var select  = d3.select("select#variables-select")
+      var select = d3.select("select#variables-select")
         .on("change", changeVariable);
 
       // bind the variables to the dropdown options
@@ -203,36 +206,36 @@ body {
     });
   });
 
-// filterCSV takes a csv object and key and returns an array with
-// the data filtered by this key and the new extent
-function filterCSV(csv, key) {
+  // filterCSV takes a csv object and key and returns an array with
+  // the data filtered by this key and the new extent
+  function filterCSV(csv, key) {
 
-  var data = d3.nest()
-    .key(function(d) {return d.quality;})
-    .rollup(function(leaves) {
-      return leaves.map(function(d) {return +d[key]})
-    })
-  .entries(csv);
+    var data = d3.nest()
+      .key(function(d) {return d.quality;})
+      .rollup(function(leaves) {
+        return leaves.map(function(d) {return +d[key]})
+      })
+    .entries(csv);
 
-  data = data.map(function(d) { return d.values })
+    data = data.map(function(d) { return d.values })
 
-  var extent = d3.extent(csv.map(function(d) {return +d[key]}));
-  return [data, extent]
-}
+    var extent = d3.extent(csv.map(function(d) {return +d[key]}));
+    return [data, extent]
+  }
 
-// Returns a function to compute the interquartile range.
-function iqr(k) {
-  return function(d, i) {
-    var q1 = d.quartiles[0],
-    q3 = d.quartiles[2],
-    iqr = (q3 - q1) * k,
-    i = -1,
-    j = d.length;
-    while (d[++i] < q1 - iqr);
-    while (d[--j] > q3 + iqr);
-    return [i, j];
-  };
-}
+  // Returns a function to compute the interquartile range.
+  function iqr(k) {
+    return function(d, i) {
+      var q1 = d.quartiles[0],
+      q3 = d.quartiles[2],
+      iqr = (q3 - q1) * k,
+      i = -1,
+      j = d.length;
+      while (d[++i] < q1 - iqr);
+      while (d[--j] > q3 + iqr);
+      return [i, j];
+    };
+  }
 
   </script>
 </body>
