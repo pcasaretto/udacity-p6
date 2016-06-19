@@ -79,7 +79,7 @@ body {
         <span id="span4" style="opacity: 0">The most revealing correlation found was quality vs alcohol.</span>
         <span id="span5" style="opacity: 0">With an increase in alcohol graduation we see an increase in the concentration of better graded wines.</span>
         <span id="span6" style="opacity: 0">Given the high number of outliers we cannot rely on alcohol alone to produce better wines</span>
-        <span id="span7" style="opacity: 0">but next time you're at the supermarket it might be a good idead to look for stronger wines.</span>
+        <span id="span7" style="opacity: 0">but next time you're at the supermarket it might be a good idea to look for stronger wines.</span>
       </p>
       <p>
         <span id="span8" style="opacity: 0">Finnaly, this visualization allows you to explore other variables and their relations with quality.</span>
@@ -173,6 +173,14 @@ body {
         .append("g")
         .call(chart);
 
+      // add rects we'll use to style afterwards
+      boxes.append("rect")
+        .attr("class","highlight")
+        .attr("width", width)
+        .attr("height", height)
+        .style("stroke","none")
+        .style("fill","none");
+
       var xAxis = d3.svg.axis()
                 .scale(xScale)
                 .orient("bottom");
@@ -216,8 +224,9 @@ body {
     });
 
     var s = d3.select;
-    var segueDuration = 1500;
-    var transitionDuration = 300;
+    var sAll = d3.selectAll;
+    var segueDuration = 2500;
+    var transitionDuration = 700;
     var story = [
       // initial segue, delays animation start
       new animate.Segue(
@@ -227,58 +236,122 @@ body {
       ),
       new animate.Segue(
         segueDuration,
-        new animate.Transition(segueDuration, function(){
+        new animate.Transition(transitionDuration, function(){
           s("#span1").transition().duration(transitionDuration).style("opacity", 1);
+          sAll("g.box rect.highlight")
+            .select(function(e,i) { return (i == 3 ? this : null) })
+            .style("fill-opacity", "0")
+            .style("fill", "yellow")
+            .transition()
+            .duration(transitionDuration)
+            .style("fill-opacity", "0.3");
         }),
-        new animate.Transition(transitionDuration, function(){})
+        new animate.Transition(transitionDuration, function(){
+          sAll("g.box rect.highlight")
+            .select(function(e,i) { return (i == 3 ? this : null) })
+            .transition()
+            .duration(transitionDuration)
+            .style("fill-opacity", "0");
+        })
       ),
       new animate.Segue(
         segueDuration,
-        new animate.Transition(segueDuration, function(){
+        new animate.Transition(transitionDuration, function(){
           s("#span2").transition().duration(transitionDuration).style("opacity", 1);
+          sAll("g.box rect.highlight")
+            .select(function(e,i) { return (i == 0 || i == 5 ? this : null) })
+            .style("fill-opacity", "0")
+            .style("fill", "yellow")
+            .transition()
+            .duration(transitionDuration)
+            .style("fill-opacity", "0.3");
         }),
-        new animate.Transition(transitionDuration, function(){})
+        new animate.Transition(transitionDuration, function(){
+          sAll("g.box rect.highlight")
+            .select(function(e,i) { return (i == 0 || i == 5 ? this : null) })
+            .transition()
+            .duration(transitionDuration)
+            .style("fill-opacity", "0");
+        })
       ),
       new animate.Segue(
         segueDuration,
-        new animate.Transition(segueDuration, function(){
+        new animate.Transition(transitionDuration, function(){
           s("#span3").transition().duration(transitionDuration).style("opacity", 1);
+          var colorScale = ['#fee5d9','#fcbba1','#de2d26', '#de2d26', '#fcbba1', '#fee5d9'];
+          sAll("g.box rect.highlight")
+            .style("fill-opacity", "0")
+            .style("fill", function(d,i) { return colorScale[i]})
+            .transition()
+            .duration(transitionDuration)
+            .style("fill-opacity", "0.5");
         }),
-        new animate.Transition(transitionDuration, function(){})
+        new animate.Transition(transitionDuration, function(){
+          sAll("g.box rect.highlight")
+            .transition()
+            .duration(transitionDuration)
+            .style("fill-opacity", "0");
+        })
       ),
       new animate.Segue(
         segueDuration,
-        new animate.Transition(segueDuration, function(){
+        new animate.Transition(transitionDuration, function(){
           s("#span4").transition().duration(transitionDuration).style("opacity", 1);
         }),
-        new animate.Transition(transitionDuration, function(){})
+        new animate.Transition(transitionDuration, function(){ })
       ),
       new animate.Segue(
         segueDuration,
-        new animate.Transition(segueDuration, function(){
+        new animate.Transition(transitionDuration, function(){
           s("#span5").transition().duration(transitionDuration).style("opacity", 1);
+          var colorScale = ['#f2f0f7','#dadaeb','#bcbddc','#9e9ac8','#756bb1','#54278f'];
+          sAll("g.box rect.highlight")
+            .style("fill-opacity", "0")
+            .style("fill", function(d,i) { return colorScale[i]})
+            .transition()
+            .duration(transitionDuration)
+            .style("fill-opacity", "0.3");
         }),
         new animate.Transition(transitionDuration, function(){})
       ),
       new animate.Segue(
         segueDuration,
-        new animate.Transition(segueDuration, function(){
+        new animate.Transition(transitionDuration, function(){
           s("#span6").transition().duration(transitionDuration).style("opacity", 1);
+          sAll(".outlier")
+            .style("fill", "none")
+            .style("stroke", "#ccc")
+            .transition()
+            .duration(transitionDuration)
+            .style("fill", "red")
+            .attr("r", 10);
         }),
-        new animate.Transition(transitionDuration, function(){})
+        new animate.Transition(transitionDuration, function(){
+          sAll(".outlier")
+            .transition()
+            .duration(transitionDuration)
+            .attr("r", 5)
+            .style("fill", "none");
+        })
       ),
       new animate.Segue(
         segueDuration,
-        new animate.Transition(segueDuration, function(){
+        new animate.Transition(transitionDuration, function(){
           s("#span7").transition().duration(transitionDuration).style("opacity", 1);
         }),
-        new animate.Transition(transitionDuration, function(){})
+        new animate.Transition(transitionDuration, function(){
+          sAll("g.box rect.highlight")
+            .transition()
+            .duration(transitionDuration)
+            .style("fill-opacity", "0");
+        })
       ),
       new animate.Segue(
         segueDuration,
-        new animate.Transition(segueDuration, function(){
+        new animate.Transition(transitionDuration, function(){
           s("#span8").transition().duration(transitionDuration).style("opacity", 1);
-          s("#select-form").transition().duration(transitionDuration).style("opacity", 1);
+          s("#select-form").transition().duration(transitionDuration)
+            .style("opacity", 1);
         }),
         new animate.Transition(transitionDuration, function(){})
       ),
