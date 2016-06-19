@@ -80,6 +80,7 @@ body {
 </div>
   <script src="//d3js.org/d3.v3.min.js"></script>
   <script src="js/box.js"></script>
+  <script src="js/animate.js"></script>
   <script>
 
   var margin = {top: 10, right: 50, bottom: 20, left: 50},
@@ -204,6 +205,21 @@ body {
         .attr("value", function(d) { return d.variable ;});
 
     });
+
+    var story = [
+      new animate.Segue(
+        1000,
+        new animate.Transition(300, function(){ console.log("building in 1")}),
+        new animate.Transition(300, function(){ console.log("building out 1")})
+      ),
+      new animate.Segue(
+        1000,
+        new animate.Transition(300, function(){ console.log("building in 2")}),
+        new animate.Transition(300, function(){ console.log("building out 2")})
+      )
+    ]
+
+    new animate.Animation(story).start()
   });
 
   // filterCSV takes a csv object and key and returns an array with
