@@ -107,17 +107,16 @@ body {
       var full_width = data.length * (width + margin.left + margin.right);
       var internal_width = full_width - padding.left - padding.right
 
+      // append the svg element to our div
       var svg = d3.select("div#chart")
         .append("svg")
         .attr("width", full_width)
         .attr("height", height + margin.bottom + margin.top + 20);
 
+      // here we set up the xscale from the quality scores
       var xScale = d3.scale.ordinal().domain([3,4,5,6,7,8]).rangePoints([0, internal_width], 0.5)
 
-      svg.append("g")
-        .attr("width", internal_width)
-        .attr("height", 20)
-
+      // append a g and a text element for the x axis label
       svg.append("g")
         .attr("width", internal_width)
         .attr("height", 20)
@@ -128,6 +127,8 @@ body {
         .attr("text-anchor", "middle")
         .text("Quality")
 
+      // append a g and a text element for the y axis labels
+      // we also capture it in a variable so we can change the text later
       var variable_label = svg.append("g")
         .attr("width", 20)
         .attr("height", height)
@@ -139,10 +140,13 @@ body {
         .attr("text-anchor", "middle")
         .text(variables[0]["units"])
 
+      // add a group to contain the actual chart
       var chart_g = svg
         .append("g")
         .attr("transform", "translate(20,20)")
 
+      // here we bind the data to an enter selection and call the chart function
+      // to actually draw each boxplot
       var boxes = chart_g
         .selectAll("g")
         .data(data)
@@ -165,11 +169,15 @@ body {
         .call(xAxis);
 
       function changeVariable() {
-        // var key = this.children[this.selectedIndex].value;
+        // get the selected variable name from variables, and filter our data
+        // accordingly
         var key = variables[this.selectedIndex]["variable"];
         var r = filterCSV(csv, key);
         var data = r[0];
         var extent = r[1];
+
+        // rebind data to out chart, correct the extent and animate the
+        // transition
         boxes.datum(function(d,i) {
           return data[i];
         })
@@ -178,14 +186,14 @@ body {
         variable_label.text(variables[this.selectedIndex]["units"])
       };
 
-
+      // bind the change event on our dropdown element to changeVariable
       var select  = d3.select("select#variables-select")
         .on("change", changeVariable);
 
+      // bind the variables to the dropdown options
       var options = select
         .selectAll('option')
         .data(variables);
-
       options
         .enter()
         .append("option")
@@ -195,7 +203,8 @@ body {
     });
   });
 
-
+// filterCSV takes a csv object and key and returns an array with
+// the data filtered by this key and the new extent
 function filterCSV(csv, key) {
 
   var data = d3.nest()
@@ -207,7 +216,7 @@ function filterCSV(csv, key) {
 
   data = data.map(function(d) { return d.values })
 
-    var extent = d3.extent(csv.map(function(d) {return +d[key]}));
+  var extent = d3.extent(csv.map(function(d) {return +d[key]}));
   return [data, extent]
 }
 
